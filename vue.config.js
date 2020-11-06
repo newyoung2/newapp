@@ -13,8 +13,8 @@ module.exports = {
   // sub-path here. For example, if your app is deployed at
   // https://www.foobar.com/my-app/
   // then change this to '/my-app/'
-  publicPath: './',
-  //publicPath: process.env.NODE_ENV === 'production'? '/static' : '/',
+  // publicPath: 'newapp',
+  publicPath: process.env.NODE_ENV === 'production'? '/newapp/' : '/',
 
   // where to output built files
   outputDir: 'newapp',
