@@ -16,6 +16,10 @@ import './assets/css/reset.css'
 import 'dat.gui/build/dat.gui.js';
 import 'dat.gui/build/dat.gui.css';
 
+// import Cesium from 'cesium/Cesium'
+// import '../node_modules/cesium/Build/Cesium/Widgets/widgets.css'
+// Vue.prototype.Cesium = Cesium
+
 
 // 全局过滤器&全局过滤器定义
 import filters from "@/filter/index.js";
