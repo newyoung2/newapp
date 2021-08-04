@@ -38,11 +38,11 @@ export default {
   components: {},
   created() {},
   mounted() {
+    this.$store.state.normal.loading = true
     this.init();
     this.animate();
   },
   beforeDestroy() {
-    this.gui.destroy();
   },
   methods: {
     init() {
@@ -116,7 +116,7 @@ export default {
           that.knot = collada.scene;
           that.knot.position.y = -3
            that.scene.add(that.knot);
-
+          that.$store.state.normal.loading = false
 				} );
       //
 
@@ -203,7 +203,7 @@ export default {
 
     //   that.camera.lookAt(that.scene.position);
       // console.log(that.knot)
-	  that.knot.rotation.z += 0.02
+	  that.knot?that.knot.rotation.z += 0.02:''
       that.renderer.render(that.scene, that.camera);
     },
   },

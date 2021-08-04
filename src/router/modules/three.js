@@ -12,7 +12,7 @@ const three = {
     icon: 'three'
   },
   children: [
-    {
+      {
         path: '/three/unit2Example1',
         component: () => import('@/views/unit2/example1.vue')
       },
@@ -55,7 +55,21 @@ const three = {
       {
         path: '/three/unit2Example11',
         component: () => import('@/views/unit2/example11.vue')
-      }
+      },
+      {
+        path: '/three/unit2Example12',
+        component: () => import('@/views/unit2/example12.vue')
+      },
+      {
+        path: '/three/unit2Example13',
+        component: () => import('@/views/unit2/example13.vue')
+      },
+      {
+        path: '/three/unit2Example14',
+        component: () => import('@/views/unit2/example14.vue')
+      },
+      
   ]
 }
+
 export default three

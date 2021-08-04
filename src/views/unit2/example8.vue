@@ -48,7 +48,7 @@ export default {
   created() {},
   mounted() {
       let that = this
-      
+      this.$store.state.normal.loading = true
     this.init();
     this.animate();
   },
@@ -181,6 +181,7 @@ export default {
           console.log(that.knot)
           // that.tween.start()
           that.scene.add(that.knot);
+          that.$store.state.normal.loading = false
         }
       );
 
@@ -207,6 +208,7 @@ export default {
           that.knot1 = mesh;
         
           that.scene.add(that.knot1);
+          that.$store.state.normal.loading = false
         }
       );
 

@@ -6,45 +6,22 @@
         </div>
      </div>
      <p v-show="!$store.state.isCollapse"  style="width:100%;text-align:center;color:white;font-size:16px;">liuyang</p> 
-     
-     <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      background-color="#484848"
-      text-color="#fff"
-      :collapse="$store.state.isCollapse"
-      router
-      active-text-color="#ffd04b">
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span>Three.js示例</span>
-        </template>
-        <!-- <el-menu-item index="/unit2Example1">test1</el-menu-item> -->
-        <el-menu-item index="/three/unit2Example2">添加立方体</el-menu-item>
-        <el-menu-item index="/three/unit2Example3">平面光示例</el-menu-item>
-        <el-menu-item index="/three/unit2Example4">凸面体示例</el-menu-item>
-        <el-menu-item index="/three/unit2Example5">几何体转粒子系统</el-menu-item>
-        <el-menu-item index="/three/unit2Example6">加载OBJ/MTL模型</el-menu-item>
-        <el-menu-item index="/three/unit2Example7">加载collada模型</el-menu-item>
-        <el-menu-item index="/three/unit2Example8">加载ply模型</el-menu-item>
-        <el-menu-item index="/three/unit2Example9">加载gltf动画模型</el-menu-item>
-        <el-menu-item index="/three/unit2Example10">环境贴图</el-menu-item>
-        <!-- <el-menu-item index="/unit2Example11">加入物理效果</el-menu-item> -->
-      </el-submenu>
-    </el-menu>
+     <sideMenu></sideMenu>
   </div>
 </template>
 
 <script>
+import sideMenu from './sideMenu'
 export default {
   props: {},
   data() {
-    return {};
+    return {
+      
+    };
   },
   computed: {},
   watch: {},
-  components: {},
+  components: {sideMenu},
   created() {},
   mounted() {},
   methods: {},

@@ -7,9 +7,6 @@ Vue.use(Router)
 /* Layout */
 import Home from '../views/Home.vue'
 
-/* Router Modules */
-import three from './modules/three'
-
 export const constantRoutes = [
     {
         path: '/',
@@ -22,25 +19,24 @@ export const constantRoutes = [
               },
         ]
     },
-    // {
-    //     path: '/login',
-    //     name:'login',
-    //     component: () => import('@/views/login/index'),
-    // },
-    // {
-    //     path: '/404',
-    //     name:'404',
-    //     component: () => import('@/views/error-page/404'),
-    // },
 ]
 
 /**
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
+//动态注册modules文件夹中的.js路由文件  
+const modulesFiles = require.context('./modules', true, /\.js$/)
+ 
+const modules = modulesFiles.keys().reduce((modules, modulePath) => {
+  const value = modulesFiles(modulePath)
+  modules.push(value.default)
+  return modules
+}, [])
+
 export const asyncRoutes = [
-   three,
-  // 404 page must be placed at the end !!!
+   ...modules,
+  // 404页面必须放到最后
   { path: '*', redirect: '/404', hidden: true }
 ]
 
@@ -58,9 +54,9 @@ export function resetRouter() {
   router.matcher = newRouter.matcher // reset router
 }
 
-const originalPush = Router.prototype.push;
-Router.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
+// const originalPush = router.prototype.push;
+// router.prototype.push = function push(location) {
+//   return originalPush.call(this, location).catch(err => err)
+// }
 
 export default router

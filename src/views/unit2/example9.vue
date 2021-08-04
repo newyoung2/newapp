@@ -44,6 +44,7 @@ export default {
   components: {},
   created() {},
   mounted() {
+	this.$store.state.normal.loading = true
     this.init();
   },
   beforeDestroy() {
@@ -79,44 +80,62 @@ export default {
 			that.dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
 			that.dirLight.position.set( 5, 2, 8 );
 			that.scene.add( that.dirLight );
-
-			// envmap
-			const path = `${that.publicPath}textures/cube/Park2/`;
-			const format = '.jpg';
-			const envMap = new THREE.CubeTextureLoader().load( [
-				path + 'posx' + format, path + 'negx' + format,
-				path + 'posy' + format, path + 'negy' + format,
-				path + 'posz' + format, path + 'negz' + format
-			] );
-
-			that.dracoLoader = new DRACOLoader();
-			that.dracoLoader.setDecoderPath( `${that.publicPath}lib/libs/draco/gltf/` );
-
+            
 			that.loader = new GLTFLoader();
-			that.loader.setDRACOLoader( that.dracoLoader );
-			that.loader.load( `${that.publicPath}models1/gltf/LittlestTokyo.glb`, function ( gltf ) {
-                console.log(gltf)
+			that.loader.load( `SampleData/models/CesiumAir/model2.gltf`, function ( gltf ) {
+                console.log('5555',gltf)
+				that.$store.state.normal.loading = false
 				const model = gltf.scene;
-				model.position.set( 1, 1, 0 );
-				model.scale.set( 0.01, 0.01, 0.01 );
-				model.traverse( function ( child ) {
-
-					if ( child.isMesh ) child.material.envMap = envMap;
-
-				} );
+				// model.position.set( 1, 1, 0 );
+				model.scale.set( 0.1, 0.1, 0.1 );
 
 				that.scene.add( model );
-
-				that.mixer = new THREE.AnimationMixer( model );
-				that.mixer.clipAction( gltf.animations[ 0 ] ).play();
-
-				that.animate();
+				
 
 			}, undefined, function ( e ) {
 
 				console.error( e );
 
 			} );
+
+			// envmap
+			// const path = `${that.publicPath}textures/cube/Park2/`;
+			// const format = '.jpg';
+			// const envMap = new THREE.CubeTextureLoader().load( [
+			// 	path + 'posx' + format, path + 'negx' + format,
+			// 	path + 'posy' + format, path + 'negy' + format,
+			// 	path + 'posz' + format, path + 'negz' + format
+			// ] );
+
+			// that.dracoLoader = new DRACOLoader();
+			// that.dracoLoader.setDecoderPath( `${that.publicPath}lib/libs/draco/gltf/` );
+
+			// that.loader = new GLTFLoader();
+			// that.loader.setDRACOLoader( that.dracoLoader );
+			// that.loader.load( `${that.publicPath}models1/gltf/LittlestTokyo.glb`, function ( gltf ) {
+            //     console.log(gltf)
+			// 	const model = gltf.scene;
+			// 	model.position.set( 1, 1, 0 );
+			// 	model.scale.set( 0.01, 0.01, 0.01 );
+			// 	model.traverse( function ( child ) {
+
+			// 		if ( child.isMesh ) child.material.envMap = envMap;
+
+			// 	} );
+
+			// 	that.scene.add( model );
+            //     that.$store.state.normal.loading = false
+			// 	that.mixer = new THREE.AnimationMixer( model );
+			// 	that.mixer.clipAction( gltf.animations[ 0 ] ).play();
+
+			// 	that.animate();
+				
+
+			// }, undefined, function ( e ) {
+
+			// 	console.error( e );
+
+			// } );
 
 
 			// window.onresize = function () {

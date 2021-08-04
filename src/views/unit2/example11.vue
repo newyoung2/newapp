@@ -6,29 +6,22 @@
 <script>
 import * as THREE from 'THREE'
 import dat from 'dat.gui'
-import CannonPhysics from 'cannon'
+
 export default {
     props: {
 
     },
     data() {
         return {
-            videoUrl:'',
           camera: null,
           scene: null,
           renderer: null,
-          mesh: null,
-          spotLight:null,
-          plane:null,
-          cube:[],
-          sphere:null,
-          ambientLight:null,
-          spotLight:null,
-          gui:null,
-          vector:null,
+          rollOverMesh:null,
+          cubeGeo:null,
+          cubeMaterial:null,
           raycaster:null,
-          texture:null,
-          physics:null
+          mouse:null,
+          objects:[],
 
         };
     },
@@ -42,159 +35,135 @@ export default {
 
     },
     created() {
-      this.videoUrl = `${window.location.protocol}//${window.location.host}/textures/Big_Buck_Bunny_small.ogv`
     },
     mounted() {
        this.init()
     },
     beforeDestroy(){
-        this.gui.destroy();
-
-        // this.gui.add(this.controls, 'clearPlan');
-        // this.gui.add(this.controls, 'rotationSpeed', 0, 0.5);
     },
     methods: {
-      async init() {
-          let that = this
-          console.log(CannonPhysics)
-          let container = document.getElementById('container1');
-        // create a scene, that will hold all our elements such as objects, cameras and lights.
-        this.scene = new THREE.Scene();
-        
-        this.camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-        this.camera.position.set(-25,25,25)
-        this.camera.lookAt(new THREE.Vector3(15, 0, 15))
+     init(){
+         const that = this
 
-        // create a render and set the size
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setClearColor('#FFFAFA');
-        this.renderer.setSize(container.clientWidth, container.clientHeight);
-        this.renderer.shadowMapEnabled = true;
-        // create the ground plane
-        let planeGeometry = new THREE.PlaneGeometry(30, 30);
-        that.texture = await that.getTexture()
-        console.log(that.texture)
-        let planeMaterial = new THREE.MeshLambertMaterial({color:new THREE.Color("#666666"),map:that.texture});
-        this.plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        this.plane.receiveShadow = true;
-        
-        
-        this.plane.rotation.x = -0.5 * Math.PI;
-        // this.plane.rotation.set(0.3 * Math.PI,1,1);
-        this.plane.position.x = 15;
-        this.plane.position.y = 0;
-        this.plane.position.z = 15;
+         const container = document.getElementById( 'container1' );
+         that.camera = new THREE.PerspectiveCamera( 45, container.clientWidth / container.clientHeight, 1, 10000 );
+				 that.camera.position.set( 500, 800, 1300 );
+				 that.camera.lookAt( 0, 0, 0 );
 
-        this.scene.add(this.plane);
-        // CannonPhysics.addPlane(this.plane)
+				 that.scene = new THREE.Scene();
+				 that.scene.background = new THREE.Color( 0xf0f0f0 );
 
-        // var axes = new THREE.AxisHelper(100);
-        // this.scene.add(axes);
+				// roll-over helpers
 
-        // add subtle ambient lighting
-        this.ambientLight = new THREE.AmbientLight(new THREE.Color("#666666"));
-        this.scene.add(this.ambientLight);
+				const rollOverGeo = new THREE.BoxBufferGeometry( 50, 50, 50 );
+				const rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+				 that.rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
+				 that.scene.add(  that.rollOverMesh );
 
-        this.spotLight = new THREE.SpotLight(new THREE.Color("#ffffff"));
-        console.log(this.spotLight)
-        this.spotLight.position.set(25, 25, 25);
-        this.spotLight.castShadow = true;
-        this.scene.add(this.spotLight);
+				// cubes
 
-        this.controls = {
-            rotationSpeed:0.02,
-            addPlan(){
-                // console.log(that.scene)
-                let cubeSize = Math.ceil((Math.random() * 3));
-                let cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-                let cubeMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
-                that.cube.push(new THREE.Mesh(cubeGeometry, cubeMaterial));
-                that.cube[that.cube.length-1].name = "cube-" + (that.cube.length-1);
-                that.cube[that.cube.length-1].castShadow = true;
+				 that.cubeGeo = new THREE.BoxBufferGeometry( 50, 50, 50 );
+				 that.cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xfeb74c, map: new THREE.TextureLoader().load( 'textures/square-outline-textured.png' ) } );
 
-                // position the cube randomly in the scene
+				// grid
 
-                that.cube[that.cube.length-1].position.x = Math.floor(Math.random()*(30-1))+1
-                that.cube[that.cube.length-1].position.y = Math.floor(Math.random()*(10-1))+1
-                that.cube[that.cube.length-1].position.z = Math.floor(Math.random()*(30-1))+1
+				const gridHelper = new THREE.GridHelper( 1000, 20 );
+				that.scene.add( gridHelper );
 
-                // add the cube to the scene
-                that.scene.add(that.cube[that.cube.length-1]);
+				//
+
+				 that.raycaster = new THREE.Raycaster();
+				 that.mouse = new THREE.Vector2();
+
+				const geometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+				geometry.rotateX( - Math.PI / 2 );
+
+				const plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
+				// scene.add( plane );
+
+				that.objects.push( plane );
+
+				// lights
+
+				const ambientLight = new THREE.AmbientLight( 0x606060 );
+				 that.scene.add( ambientLight );
+
+				const directionalLight = new THREE.DirectionalLight( 0xffffff );
+				directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
+				 that.scene.add( directionalLight );
+
+				 that.renderer = new THREE.WebGLRenderer( { antialias: true } );
+				 that.renderer.setPixelRatio( window.devicePixelRatio );
+                 that.renderer.setSize( container.clientWidth, container.clientHeight );
+                
+				container.appendChild(  that.renderer.domElement );
+
+				document.addEventListener( 'mousemove',  that.onDocumentMouseMove, false );
+                document.addEventListener( 'mousedown',  that.onDocumentMouseDown, false );
+                window.addEventListener( 'resize', that.onWindowResize, false );
+     },
+     onWindowResize() {
+                const container = document.getElementById( 'container1' );
+				this.camera.aspect = container.clientWidth / container.clientHeight;
+				this.camera.updateProjectionMatrix();
+
+				this.renderer.setSize( container.clientWidth, container.clientHeight );
+
+			},
+      onDocumentMouseMove( event ) {
+                let that = this
+				event.preventDefault();
+                const container = document.getElementById( 'container1' );
+				that.mouse.set( ( event.clientX / container.clientWidth ) * 1.55 - 1, - ( event.clientY / container.clientHeight ) * 1.8 + 1 );
+
+				that.raycaster.setFromCamera( that.mouse, that.camera );
+
+				const intersects = that.raycaster.intersectObjects( that.objects );
+
+				if ( intersects.length > 0 ) {
+
+					const intersect = intersects[ 0 ];
+              
+					that.rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+					that.rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+
+				}
+
+				that.render();
+
+			},
+
+			 onDocumentMouseDown( event ) {
+                const that = this
+				event.preventDefault();
+                const container = document.getElementById( 'container1' );
+				that.mouse.set( ( event.clientX / container.clientWidth ) * 1.55 - 1, - ( event.clientY / container.clientHeight ) * 1.8 + 1 );
+
+				that.raycaster.setFromCamera( that.mouse, that.camera );
+
+				const intersects = that.raycaster.intersectObjects( that.objects );
+
+				if ( intersects.length > 0 ) {
+
+					const intersect = intersects[ 0 ];
+
+					// delete cube
+						const voxel = new THREE.Mesh( that.cubeGeo, that.cubeMaterial );
+						voxel.position.copy( intersect.point ).add( intersect.face.normal );
+						voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+						that.scene.add( voxel );
+
+						that.objects.push( voxel );
+					that.render();
+
+				}
+
             },
-            clearPlan(){
-                if(that.scene.children[that.scene.children.length-1].name.startsWith('cube')){
-                     that.scene.remove(that.scene.children[that.scene.children.length-1])
-                }
-            }
-        };
+            render() {
 
-        this.gui = new dat.GUI();
-        this.gui.add(this.controls, 'addPlan');
-        this.gui.add(this.controls, 'clearPlan');
-        this.gui.add(this.controls, 'rotationSpeed', 0, 0.5);
-        console.log(this.gui)
+				this.renderer.render( this.scene, this.camera );
 
-        // add the output of the renderer to the html element
-        container.appendChild(this.renderer.domElement);
-        
-        // call the render function
-        // this.renderer.render(this.scene, this.camera);
-        // this.$refs.video.play()
-        this.renders()
-
-        //   document.addEventListener('mousedown', this.onDocumentMouseDown, false);
-        // this.renderer.render(this.scene, this.camera);
-    },
-    onDocumentMouseDown(event){
-        let that = this
-        event.preventDefault();
-         that.vector = new THREE.Vector3(( event.clientX / window.innerWidth ) * 2 - 1, -( event.clientY / window.innerHeight ) * 2 + 1, 0.5);
-            that.vector = that.vector.unproject(that.camera);
-
-            that.raycaster = new THREE.Raycaster(that.camera.position, that.vector.sub(that.camera.position).normalize());
-
-            var intersects = that.raycaster.intersectObjects(that.scene.children);
-
-            if (intersects.length > 0) {
-
-                console.log(intersects[0]);
-
-                intersects[0].object.material.transparent = true;
-                intersects[0].object.material.opacity = 0.1;
-            }
-    },
-    getTexture(){
-      return new Promise((resolve,reject)=>{
-            new THREE.TextureLoader().load( `${window.location.protocol}//${window.location.host}/textures/brick_diffuse.jpg`,(texture)=>{
-                    
-                      resolve(texture)
-            },undefined,undefined );
-      })
-      
-    },
-    getVideoTexture(){
-      const video = document.getElementById( 'video' );
-
-const texture = new THREE.VideoTexture( video );
-texture.minFilter = THREE.LinearFilter;
-texture.magFilter = THREE.LinearFilter;
-texture.format = THREE.RGBFormat;
-      return texture
-    },
-    renders() {
-            let that = this
-            this.scene.traverse(function (e) {
-                if (e instanceof THREE.Mesh && e != that.plane) {
-
-                    e.rotation.x += that.controls.rotationSpeed;
-                    e.rotation.y += that.controls.rotationSpeed;
-                    e.rotation.z += that.controls.rotationSpeed;
-                }
-            });
-
-            requestAnimationFrame(this.renders);
-            this.renderer.render(this.scene, this.camera);
-        }
+			}
 
     },
 };

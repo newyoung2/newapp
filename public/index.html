@@ -5,7 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="stylesheet" href="./Cesium/Widgets/widgets.css">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/maptalks.three@latest/dist/maptalks.three.js"></script>
+    <script type="text/javascript" src="./utils//geoutil.js"></script>
+    
   </head>
   <body>
     <noscript>
@@ -13,6 +18,8 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-    <script src="./libs/ammo.wasm.js"></script>
+    <script src="./d3.js"></script>
+    <script src="./Cesium/Cesium.js"></script>
+    <script src="./Cesium/cesium-tilesetEffect.js"></script>
   </body>
 </html>

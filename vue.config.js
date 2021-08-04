@@ -1,7 +1,7 @@
 const prefix = process.env.NODE_ENV === 'production' ? '/' : '/';
-const host = process.env.NODE_ENV === 'production' ? '/plat' : '/plat';
+const host = process.env.NODE_ENV === 'production' ? '/' : '/';
 //const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-//const path = require('path');
+// const path = require('path');
 /* function resolve (dir) {
     return path.join(__dirname, dir);
 } */
@@ -39,22 +39,8 @@ module.exports = {
     //config.module.rule('eslint').use('eslint-loader')
   },
   configureWebpack: () => {
-    /* 	return {
-			optimization: {
-				minimizer: [
-				new UglifyJsPlugin({
-					uglifyOptions: {
-					compress: {
-						warnings: false,
-						drop_console: true, //console
-						drop_  : false,
-						pure_funcs: ["console.log"]//移除console
-					}
-					}
-				})
-			]
-			}
-		}; */
+  
+    
   },
 
   // vue-loader options
@@ -107,28 +93,28 @@ module.exports = {
       [host]: {
         // target: "http://139.159.191.204:8086",
         // target: "http://192.168.51.78:20068",
-        target: "http://192.168.51.100:30001",
+        target: "http://127.0.0.1:18080",
         // target: "http://rems.ktwlrj.com:20072",
         changeOrigin: true,
         // logLevel:'debug',
         secure: false,
         ws: false
-      },
-      '/fwzs':{
-        target: "http://192.168.51.78:20068",
-        // target: "http://rems.ktwlrj.com:20072",
-        // target: "http://192.168.32.53:8082",
-        changeOrigin: true,
-        logLevel:'debug',
-        secure: false,
-        ws: false
       }
+      // '/fwzs':{
+      //   target: "http://192.168.51.78:20068",
+      //   // target: "http://rems.ktwlrj.com:20072",
+      //   // target: "http://192.168.32.53:8082",
+      //   changeOrigin: true,
+      //   logLevel:'debug',
+      //   secure: false,
+      //   ws: false
+      // }
     } // string | Object
   },
-  
-
+ 
   // options for 3rd party plugins
   pluginOptions: {
     // ...
-  }
+  },
+ 
 };

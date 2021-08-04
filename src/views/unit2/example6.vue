@@ -47,11 +47,11 @@ export default {
   components: {},
   created() {},
   mounted() {
+    this.$store.state.normal.loading = true
     this.init();
     this.animate();
   },
   beforeDestroy() {
-    this.gui.destroy();
   },
   methods: {
     async init() {
@@ -95,30 +95,32 @@ export default {
        that.textureBump = await that.getTextureBump()
       new MTLLoader(that.manager)
         .setPath(
-          `${that.publicPath}models/male02/`
+          `${that.publicPath}models/building1/`
         )
-        .load("male02_dds.mtl", function (materials) {
+        .load("model1.mtl", function (materials) {
           console.log(materials)
           materials.preload();
 
           new OBJLoader(that.manager)
             .setMaterials(materials)
             .setPath(
-              `${that.publicPath}models/male02/`
+              `${that.publicPath}models/building1/`
             )
             .load(
-              "male02.obj",
+              "model1.obj",
               function (object) {
-                object.traverse( function ( child ) {
-						        if ( child.isMesh ) {
-                         child.material.map = that.texture;
-                         child.material.bumpMap = that.textureBump;
-                          child.material.bumpScale = 5;
-                    }
-					      } );
-                object.position.y = -95;
+                // object.traverse( function ( child ) {
+						    //     if ( child.isMesh ) {
+                //          child.material.map = that.texture;
+                //          child.material.bumpMap = that.textureBump;
+                //           child.material.bumpScale = 5;
+                //     }
+					      // } );
+                // object.position.y = -95;
                 that.knot = object;
+                
                 that.scene.add(that.knot);
+                that.$store.state.normal.loading = false
               },
               that.onProgress,
               that.onError
@@ -154,7 +156,7 @@ export default {
 
       // window.addEventListener( 'resize', that.onWindowResize, false );
     },
-    getTexture(){
+     getTexture(){
       let that = this
       return new Promise((resolve,reject)=>{
             new THREE.TextureLoader().load( `${that.publicPath}textures/brick_diffuse.jpg`,(texture)=>{
@@ -271,8 +273,18 @@ export default {
       //   that.camera.position.y += (-that.mouseY - that.camera.position.y) * 0.05;
 
       //   that.camera.lookAt(that.scene.position);
-      //   console.log(that.knot)
-      that.knot?that.knot.rotation.y += 0.02:""
+       
+        if(that.knot){
+          that.knot.rotation.y += 0.02
+          console.log(that.knot.children[0].material.map.offset.y)
+          if(that.knot.children[0].material.map.offset.y >= 0.5){
+            that.knot.children[0].material.map.offset.y = 0
+          }
+          that.knot.children[0].material.map.offset.y += 0.005
+          // that.knot.children.forEach(e=>{
+          //     e.material.map.offset.y += 0.00005
+          // })
+        }
       that.renderer.render(that.scene, that.camera);
     },
   },

@@ -1,7 +1,7 @@
 import axios from "axios";
 import envConfig from "@/../env.config.js";
 import { message } from 'element-ui';
-
+// console.log(axios)
 /**
  * @params
  * url: 请求地址(必须)
@@ -149,6 +149,7 @@ const httpServer = (opts) => {
         }
       })
       .catch((err) => {
+        console.log(err)
         if (err.message.includes("Network Error")) {
           // 基础服务出错，一般都是401，没有权限
           if (err.config.url.includes("api/auth")) {
