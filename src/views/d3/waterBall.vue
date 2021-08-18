@@ -1,7 +1,9 @@
 <template>
     <div class="page3">
         <!-- <lyDatePicker forbidTime = '201901' :defalutTime = "defalutTime" @datechange="getDateChange"></lyDatePicker> -->
+        
         <waterBall ref="waterBall" :svgWidth="svgWidth" :optionProp="option"></waterBall>
+        
     </div>
 </template>
 
@@ -69,7 +71,7 @@
                 }
                 this.option = objArr[sum]
                 sum ++ 
-            }, 3000);
+            }, 30000);
 
         },
         mounted() {
@@ -77,6 +79,11 @@
             document.getElementsByTagName('body')[0].classList.add('waterBall1')
             that.svgWidth = that.$refs.waterBall.offsetWidth
             //    console.log(this.$refs.waterBall.offsetWidth)
+
+            window.onresize = function () {
+                that.$refs.waterBall.reSize()
+  
+           }       
 
         },
         beforeDestroy() {

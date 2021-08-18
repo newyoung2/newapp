@@ -23,6 +23,14 @@ const d3 = {
       {
         path: '/d3/chinaMap',
         component: () => import('@/views/d3/chinaMap.vue')
+      },
+      {
+        path: '/d3/chinaMapDrag',
+        component: () => import('@/views/d3/chinaMapDrag.vue')
+      },
+      {
+        path: '/d3/force',
+        component: () => import('@/views/d3/force.vue')
       }
       
   ]

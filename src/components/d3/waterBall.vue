@@ -29,6 +29,8 @@
                 default:null
             }
         },
+        computed:{
+        },
         data() {
             return {
                 svg: null,
@@ -37,6 +39,11 @@
                 waveShape: null,
                 defs: null,
                 waveText: null,
+                initBoxSize:{
+                    width:document.body.clientWidth,
+                    height:document.body.clientHeight
+                },
+                sizeScale:500/document.body.clientWidth,
                 option:{
                     // svg相关字段
                     svgWidth:'500',  //svg宽度
@@ -94,6 +101,14 @@
                 that.renderArea()
                 that.renderPie()
                 // that.renderText()
+            },
+            reSize(){
+                this.option.svgWidth = document.body.clientWidth*this.sizeScale
+                this.option.svgHeight = document.body.clientWidth*this.sizeScale
+                this.boxWidth = document.body.clientWidth*this.sizeScale
+                console.log(this.boxWidth)
+                d3.select("svg").remove()
+                this.init()
             },
             renderArea() {
                 let that = this

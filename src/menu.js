@@ -88,7 +88,17 @@ const menu = [
         title:"中国地图",
         icon:"",
         path:"/d3/chinaMap",
-      }]
+      },
+      {
+        title:"中国地图(拖拽、缩放)",
+        icon:"",
+        path:"/d3/chinaMapDrag",
+      },
+      {
+        title:"力导向图",
+        icon:"",
+        path:"/d3/force",
+      },]
   }
     // {
     //   title: "多级菜单测试",
