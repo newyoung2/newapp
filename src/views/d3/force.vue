@@ -1,6 +1,17 @@
 <template>
-    <div id="svgBox" width="600" height="600">
+    <div id="svgBox" width="1000" height="1000">
+        <svg width="1000" height="1000">
+            <clipPath id="clipCircle">
+                <circle r="40" cx="40" cy="40" />
+            </clipPath>
+            <defs>
+                <pattern id="raduisImage" patternUnits="userSpaceOnUse" width="40" height="40">
+                    <image xlink:href="https://img1.baidu.com/it/u=623994087,1173615898&fm=26&fmt=auto&gp=0.jpg" x="0"
+                        y="0" width="40" height="40" />
+                </pattern>
+            </defs>
 
+        </svg>
     </div>
 
 </template>
@@ -18,15 +29,16 @@
         },
         data() {
             return {
-                nodes: [{ name: "桂林" }, { name: "广州" },
-                { name: "厦门" }, { name: "杭州" },
-                { name: "上海" }, { name: "青岛" },
-                { name: "天津" }],
+                nodes: [{ name: "大娃" }, { name: "二娃" },
+                { name: "三娃" }, { name: "四娃" },
+                { name: "五娃" }, { name: "六娃" },
+                { name: "七娃" }],
                 links: [{ source: 0, target: 1 }, { source: 0, target: 2 },
                 { source: 0, target: 3 }, { source: 1, target: 4 },
                 { source: 1, target: 5 }, { source: 1, target: 6 }],
                 svg: null,
-                circle: null
+                circle: null,
+                curDom: null
 
 
             };
@@ -56,11 +68,11 @@
                     .on("tick", function () {
 
                         d3.selectAll('.circle')
-                            .attr('cx', function (d) {
-                                return d.x
+                            .attr('x', function (d) {
+                                return d.x - 50
                             })
-                            .attr('cy', function (d) {
-                                return d.y
+                            .attr('y', function (d) {
+                                return d.y - 80
                             })
 
                         d3.selectAll('.text')
@@ -89,7 +101,7 @@
                 // console.log(that.nodes)
                 // console.log(that.links)
 
-                that.svg = d3.select('#svgBox').append('svg').attr('width', width).attr('height', height).append('g')
+                that.svg = d3.select('svg').append('g')
 
                 /* 添加文本 */
                 that.svg.selectAll('line')
@@ -102,15 +114,52 @@
 
 
                 /* 添加节点 */
-                that.svg.selectAll('circle')
+                that.svg.selectAll('image')
                     .data(that.nodes)
                     .enter()
-                    .append('circle')
+                    .append('image')
                     .classed('circle', true)
-                    .attr("r", 40)
-                    .style("fill", function (d, i) {
-                        return color(i);
+                    .attr('width', 100)
+                    .attr('height', 100)
+                    .attr('xlink:href', 'img/0.png')
+                    .on('mouseover', function (d, i) {
+                        d3.select(this).attr('xlink:href', 'img/1.png').transition().duration(200).attr('width', 200).attr('height', 200)
+
+                        let arr = []
+                        that.links.map(e => {
+                            if (d.index == e.source.index) {
+                                arr.push(e.target.index)
+                            } else if (d.index == e.target.index) {
+                                arr.push(e.source.index)
+                            }
+                        })
+
+                        that.svg.selectAll('image').filter(function (d) {
+                            return arr.includes(d.index)
+                        }).attr('xlink:href', 'img/1.png')
+
+
                     })
+                    .on('mouseout', function (d, i) {
+                        d3.select(this).attr('xlink:href', 'img/0.png').transition().duration(200).attr('width', 100).attr('height', 100)
+                        let arr = []
+                        that.links.map(e => {
+                            if (d.index == e.source.index) {
+                                arr.push(e.target.index)
+                            } else if (d.index == e.target.index) {
+                                arr.push(e.source.index)
+                            }
+                        })
+
+                        that.svg.selectAll('image').filter(function (d) {
+                            return arr.includes(d.index)
+                        }).attr('xlink:href', 'img/0.png')
+                    })
+                    // .attr('clip-path','url(#clipCircle)')
+                    // .attr("r", 40)
+                    // .style("fill", function (d, i) {
+                    //     return 'url(#raduisImage)'//color(i);
+                    // })
                     .call(d3.drag().on("start", function (d) {
                         if (!d3.event.active) simulation.alphaTarget(0.3).restart(); //alpha是动画的冷却系数，运动过程中会不断减小，直到小于0.005为止，此时动画会停止。
                         d.fx = d.x;    //fx为固定坐标，x为初始坐标  注3>  
@@ -133,14 +182,14 @@
                     .enter()
                     .append('text')
                     .classed('text', true)
-                    .style("fill", "white")
+                    .style("fill", "black")
                     .attr("dx", -15)
-                    .attr("dy", 8)
+                    .attr("dy", -90)
                     .text(function (d) {
                         return d.name;
                     });
 
-                
+
 
             },
 
