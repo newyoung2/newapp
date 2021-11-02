@@ -39,7 +39,6 @@ export default {
       texture:null,
       textureBump:null,
       publicPath: process.env.BASE_URL
-
     };
   },
   computed: {},
@@ -47,26 +46,17 @@ export default {
   components: {},
   created() {},
   mounted() {
-    this.$store.state.normal.loading = true
     this.init();
     this.animate();
   },
   beforeDestroy() {
+    this.gui.destroy();
   },
   methods: {
     async init() {
       let that = this;
-      // var container;
-
-      // var camera, scene, renderer;
-
-      // var mouseX = 0, mouseY = 0;
-
-      var windowHalfX = window.innerWidth / 2;
-      var windowHalfY = window.innerHeight / 2;
 
       var container = document.getElementById("container1");
-
       that.camera = new THREE.PerspectiveCamera(
         45,
         container.clientWidth / container.clientHeight,
@@ -74,66 +64,54 @@ export default {
         2000
       );
       that.camera.position.z = 250;
-
       // scene
-
       that.scene = new THREE.Scene();
-
       that.ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
       that.scene.add(that.ambientLight);
-
       that.pointLight = new THREE.PointLight(0xffffff, 0.8);
       that.camera.add(that.pointLight);
       that.scene.add(that.camera);
-
       that.manager = new THREE.LoadingManager();
       that.manager.addHandler(/\.dds$/i, new DDSLoader());
-
       // comment in the following line and import TGALoader if your asset uses TGA textures
       // manager.addHandler( /\.tga$/i, new TGALoader() );
       that.texture = await that.getTexture()
        that.textureBump = await that.getTextureBump()
       new MTLLoader(that.manager)
         .setPath(
-          `${that.publicPath}models/building1/`
+          `${that.publicPath}models/male02/`
         )
-        .load("model1.mtl", function (materials) {
+        .load("male02_dds.mtl", function (materials) {
           console.log(materials)
           materials.preload();
-
           new OBJLoader(that.manager)
             .setMaterials(materials)
             .setPath(
-              `${that.publicPath}models/building1/`
+              `${that.publicPath}models/male02/`
             )
             .load(
-              "model1.obj",
+              "male02.obj",
               function (object) {
-                // object.traverse( function ( child ) {
-						    //     if ( child.isMesh ) {
-                //          child.material.map = that.texture;
-                //          child.material.bumpMap = that.textureBump;
-                //           child.material.bumpScale = 5;
-                //     }
-					      // } );
-                // object.position.y = -95;
+                object.traverse( function ( child ) {
+                                if ( child.isMesh ) {
+                         child.material.map = that.texture;
+                         child.material.bumpMap = that.textureBump;
+                          child.material.bumpScale = 5;
+                    }
+                          } );
+                object.position.y = -95;
                 that.knot = object;
-                
                 that.scene.add(that.knot);
-                that.$store.state.normal.loading = false
               },
               that.onProgress,
               that.onError
             );
         });
-
       //
-
       that.renderer = new THREE.WebGLRenderer();
       that.renderer.setPixelRatio(window.devicePixelRatio);
       that.renderer.setSize(container.clientWidth, container.clientHeight);
        
-
       // this.raycaster = new THREE.Raycaster();
       //       this.mouseVector = new THREE.Vector3();
       //       this.group = new THREE.Group();
@@ -143,20 +121,14 @@ export default {
       this.mouse = new THREE.Vector2();
         container.addEventListener('mousedown', that.onDocumentMouseDown, false );     
       // window.addEventListener( 'resize', that.onWindowResize, false );
-
-
       container.appendChild(that.renderer.domElement);
       // that.controls = new OrbitControls(that.camera, that.renderer.domElement);
-
-
       
       document.addEventListener( 'mousemove', that.onDocumentMouseMove, false );
-
       //
-
       // window.addEventListener( 'resize', that.onWindowResize, false );
     },
-     getTexture(){
+    getTexture(){
       let that = this
       return new Promise((resolve,reject)=>{
             new THREE.TextureLoader().load( `${that.publicPath}textures/brick_diffuse.jpg`,(texture)=>{
@@ -177,10 +149,8 @@ export default {
     onDocumentMouseDown(event){
        let that = this;
       event.preventDefault();
-
       that.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       that.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
       that.raycaster.setFromCamera(that.mouse, that.camera);
       const intersects = that.raycaster.intersectObjects(that.knot.children);
       console.log(intersects);
@@ -189,7 +159,6 @@ export default {
         intersects[0].object.material.transparent = true;
         intersects[0].object.material.opacity = 0.5;
       }
-
     },
     getIntersects( x, y ) {
             
@@ -204,13 +173,11 @@ export default {
             this.camera.updateProjectionMatrix();
  
             this.renderer.setSize( window.innerWidth, window.innerHeight );
-
     },
     generateSprite() {
       var canvas = document.createElement("canvas");
       canvas.width = 16;
       canvas.height = 16;
-
       var context = canvas.getContext("2d");
       var gradient = context.createRadialGradient(
         canvas.width / 2,
@@ -224,10 +191,8 @@ export default {
       gradient.addColorStop(0.2, "rgba(0,255,255,1)");
       gradient.addColorStop(0.4, "rgba(0,0,64,1)");
       gradient.addColorStop(1, "rgba(0,0,0,1)");
-
       context.fillStyle = gradient;
       context.fillRect(0, 0, canvas.width, canvas.height);
-
       var texture = new THREE.Texture(canvas);
       texture.needsUpdate = true;
       return texture;
@@ -238,53 +203,45 @@ export default {
         console.log(Math.round(percentComplete, 2) + "% downloaded");
       }
     },
-
     onError() {},
     // onWindowResize() {
     //   let that = this;
     //   that.windowHalfX = window.innerWidth / 2;
     //   that.windowHalfY = window.innerHeight / 2;
-
     //   that.camera.aspect = window.innerWidth / window.innerHeight;
     //   that.camera.updateProjectionMatrix();
-
     //   that.renderer.setSize(window.innerWidth, window.innerHeight);
     // },
-
     // onDocumentMouseMove(event) {
     //   let that = this;
     //   that.mouseX = (event.clientX - that.windowHalfX) / 2;
     //   that.mouseY = (event.clientY - that.windowHalfY) / 2;
     // },
-
     //
-
     animate() {
       let that = this;
       // that.controls.update();
-
       requestAnimationFrame(that.animate);
       that.render();
     },
-
     render() {
       let that = this;
       //   that.camera.position.x += (that.mouseX - that.camera.position.x) * 0.05;
       //   that.camera.position.y += (-that.mouseY - that.camera.position.y) * 0.05;
-
       //   that.camera.lookAt(that.scene.position);
-       
-        if(that.knot){
-          that.knot.rotation.y += 0.02
-          console.log(that.knot.children[0].material.map.offset.y)
-          if(that.knot.children[0].material.map.offset.y >= 0.5){
-            that.knot.children[0].material.map.offset.y = 0
-          }
-          that.knot.children[0].material.map.offset.y += 0.005
-          // that.knot.children.forEach(e=>{
-          //     e.material.map.offset.y += 0.00005
-          // })
+      //   console.log(that.knot)
+      if(that.knot){
+        that.knot.rotation.y += 0.02
+        console.log(that.knot)
+        if(that.knot.children[0].material.map.offset.y >= 0.5){
+          that.knot.children[0].material.map.offset.y = 0
         }
+        that.knot.children[0].material.map.offset.y += 0.005
+        // that.knot.children.forEach(e=>{
+        //     e.material.map.offset.y += 0.00005
+        // })
+      }
+      that.knot?that.knot.rotation.y += 0.02:""
       that.renderer.render(that.scene, that.camera);
     },
   },
@@ -296,7 +253,6 @@ export default {
   width: 100%;
   height: 100%;
 }
-
 .gl {
   width: 100%;
   height: 100%;

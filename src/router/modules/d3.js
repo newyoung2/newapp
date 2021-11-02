@@ -29,9 +29,33 @@ const d3 = {
         component: () => import('@/views/d3/chinaMapDrag.vue')
       },
       {
+        path: '/d3/worldMap',
+        component: () => import('@/views/d3/worldMap.vue')
+      },
+      {
         path: '/d3/force',
         component: () => import('@/views/d3/force.vue')
+      },
+      {
+        path: '/d3/chord',
+        component: () => import('@/views/d3/chord.vue')
+      },
+      {
+        path: '/d3/polar',
+        component: () => import('@/views/d3/polar.vue')
+      },
+      {
+        path: '/d3/tree',
+        component: () => import('@/views/d3/tree.vue')
+      },
+      {
+        path: '/d3/cluster',
+        component: () => import('@/views/d3/cluster.vue')
       }
+      // {
+      //   path: '/d3/rankBar',
+      //   component: () => import('@/views/d3/rankBar.vue')
+      // }
       
   ]
 }

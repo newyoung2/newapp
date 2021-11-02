@@ -151,6 +151,55 @@
                         }
                     ]
                 }
+                },
+                {
+                    borderLength:600,
+                    colorRange:['#FFA500','#FF0000'],
+                    data: {
+                    "name": "A1",
+                    "id":"A1001",
+                    "bgColor":'#6A5ACD',
+                    'isNode': false,
+                    "children": [
+                        {
+                            "name": "B1",
+                            "id":"B1001",
+                            "bgColor":'#6A5ACD',
+                            "value": 110
+                        },
+                        {
+                            "name": "B2",
+                            "id":"B2001",
+                            "bgColor":'#6A5ACD',  //传入bgColor  自定义图形背景色
+                            "value": 410
+                        },
+                        {
+                            "name": "B2",
+                            "id":"B2001",
+                            "bgColor":'#6A5ACD',  //传入bgColor  自定义图形背景色
+                            "value": 210
+                        },
+                        {
+                            "name": "B2",
+                            "id":"B2001",
+                            "bgColor":'#6A5ACD',  //传入bgColor  自定义图形背景色
+                            "value": 310
+                        },
+                        {
+                            "name": "B2",
+                            "id":"B2001",
+                            "bgColor":'#6A5ACD',  //传入bgColor  自定义图形背景色
+                            "value": 710
+                        },
+                        {
+                            "name": "B2",
+                            "id":"B2001",
+                            "bgColor":'#6A5ACD',  //传入bgColor  自定义图形背景色
+                            "value": 410
+                        },
+                        
+                    ]
+                }
                 }]
             };
         },
@@ -170,7 +219,7 @@
         mounted() {
             // this.option = this.moniData[1]
             setInterval(() => {
-                if(sum > 3){
+                if(sum > 4){
                     sum = 0
                 }
                 this.option = this.moniData[sum]

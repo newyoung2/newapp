@@ -95,10 +95,41 @@ const menu = [
         path:"/d3/chinaMapDrag",
       },
       {
+        title:"世界地图",
+        icon:"",
+        path:"/d3/worldMap",
+      },
+      {
         title:"力导向图",
         icon:"",
         path:"/d3/force",
-      },]
+      },
+      // {
+      //   title:"排行榜",
+      //   icon:"",
+      //   path:"/d3/rankBar",
+      // },
+      {
+        title:"弦图",
+        icon:"",
+        path:"/d3/chord",
+      },
+      {
+        title:"极坐标",
+        icon:"",
+        path:"/d3/polar",
+      },
+      {
+        title:"树图",
+        icon:"",
+        path:"/d3/tree",
+      },
+      {
+        title:"集群图",
+        icon:"",
+        path:"/d3/cluster",
+      },
+    ]
   }
     // {
     //   title: "多级菜单测试",

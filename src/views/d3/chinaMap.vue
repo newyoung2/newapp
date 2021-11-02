@@ -70,7 +70,9 @@
             },
             reDraw(url, type) {
                 let that = this
-                d3.json(url, function (err, root) {
+                // console.log(url)
+                d3.json(url).then(root=>{
+                    
                     root.features = root.features.map(e => {
                         e.properties.duration = that.getRandomInt(3000, 10000)
                         return e
@@ -81,7 +83,6 @@
                     } else {
                         that.mapEasy('#svgBox', root)
                     }
-
                 })
             },
             makeData(data, projection) {
@@ -109,6 +110,7 @@
                 return arr
             },
             mapEasy(id, data) {
+               
                 let that = this
                 that.svg = null
                 that.map = null

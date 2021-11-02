@@ -58,7 +58,7 @@
                 let that = this
                 var width = 1000;
                 var height = 1000;
-                var color = d3.scaleOrdinal(d3.schemeCategory20);
+                var color = d3.scaleOrdinal(d3.schemeCategory10);
 
                 //初始化力学仿真器，通过布局函数格式化数据    
                 simulation = d3.forceSimulation(that.nodes)
@@ -161,6 +161,7 @@
                     //     return 'url(#raduisImage)'//color(i);
                     // })
                     .call(d3.drag().on("start", function (d) {
+                       
                         if (!d3.event.active) simulation.alphaTarget(0.3).restart(); //alpha是动画的冷却系数，运动过程中会不断减小，直到小于0.005为止，此时动画会停止。
                         d.fx = d.x;    //fx为固定坐标，x为初始坐标  注3>  
                         d.fy = d.y;

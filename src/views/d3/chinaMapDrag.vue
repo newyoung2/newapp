@@ -73,7 +73,7 @@
             },
             reDraw(url, type) {
                 let that = this
-                d3.json(url, function (err, root) {
+                d3.json(url).then(root=>{
                     that.mapEasy('#svgBox', root)
                 })
             },
@@ -89,7 +89,7 @@
                     lng: '',
                     lat: ''
                 }
-                var color = d3.scaleOrdinal(d3.schemeCategory20);
+                var color = d3.scaleOrdinal(d3.schemeCategory10); // d3.scaleOrdinal(d3.schemeCategory20);
 
 
 
